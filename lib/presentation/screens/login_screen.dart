@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
+import 'package:flutter_application_1/clientHttp.dart';
 import 'package:flutter_application_1/presentation/widgets/CustomWidgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class Login_screen extends StatefulWidget {
   const Login_screen({super.key});
@@ -16,13 +16,15 @@ class _login_screen extends State<Login_screen> {
   String password = "";
   String resultado = "";
 
-  Future<void> makePostRequest(BuildContext context) async {
-    const url = "http://adempiere.erpcya.com:1174/api/security/login";
-
+  void SendLogin(BuildContext context) async {
     Map<String, String> body = {"user_name": username, "user_pass": password};
 
-    http.Response response = await http.post(Uri.parse(url),
-        headers: {"Content-Type": "application/json"}, body: json.encode(body));
+    Future<http.Response> consulta = clientHttp().makePostRequest(
+      "http://adempiere.erpcya.com:1174/api/security/login",
+      body
+    );
+
+    http.Response response = await consulta;
 
     if (response.statusCode == 200) {
       final responseBody = response.body;
@@ -81,7 +83,7 @@ class _login_screen extends State<Login_screen> {
                         resultado = "datos completos";
                       });
 
-                      makePostRequest(context);
+                      SendLogin(context);
                     } else {
                       setState(() {
                         resultado = "datos incompletos";

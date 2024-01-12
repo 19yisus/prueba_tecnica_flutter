@@ -26,7 +26,7 @@ class buttonCustom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: ElevatedButton(
+      child: FilledButton.tonal(
           onPressed: onPresed, child: Center(child: Text(textButton))),
     );
   }

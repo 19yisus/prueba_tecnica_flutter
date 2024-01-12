@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:flutter_application_1/clientHttp.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -21,16 +22,13 @@ class _WelcomeState extends State<Welcome> {
     String? param = widget.param;
 
     if (param != null) token = response.fromJson(json.decode(param)).token;
-    makeGetResquest(token);
+    verificarToken(token);
   }
 
-  Future<void> makeGetResquest(String tokenString) async {
-    String url = "http://adempiere.erpcya.com:1174/api/security/menu";
+  Future<void> verificarToken(String tokenString) async{
+    Future<http.Response> consulta = clientHttp().VerifyAuth(tokenString);
 
-    http.Response response = await http.get(Uri.parse(url), headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $tokenString"
-    });
+    http.Response response = await consulta;
 
     if (response.statusCode == 200) {
       final responseBody = response.body;
