@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,7 +15,7 @@ class _login_screen extends State<Login_screen> {
   String password = "";
   String resultado = "";
 
-  Future<void> makePostRequest() async {
+  Future<void> makePostRequest(BuildContext context) async {
     const url = "http://adempiere.erpcya.com:1174/api/security/login";
 
     Map<String, String> body = {
@@ -29,8 +30,10 @@ class _login_screen extends State<Login_screen> {
     );
 
     if(response.statusCode == 200){
+      final responseBody = response.body;
       setState((){
         resultado = "Login exitoso";
+        context.push("/welcome/$responseBody");
       });
     }else{
       setState((){
@@ -99,7 +102,8 @@ class _login_screen extends State<Login_screen> {
                           resultado = "datos completos";
                         });
 
-                        makePostRequest();
+                        makePostRequest(context);
+                        
                       }else{
                         setState((){
                           resultado = "datos incompletos";
